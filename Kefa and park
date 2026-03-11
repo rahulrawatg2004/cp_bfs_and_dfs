@@ -1,0 +1,60 @@
+https://codeforces.com/problemset/problem/580/C
+
+import java.util.*;
+
+public class Main {
+
+    static int count = 0;
+
+    public static void dfs(int node, int parent, int[] cat, int freq,
+                           ArrayList<ArrayList<Integer>> adj, int capacity) {
+
+        if(freq > capacity) return;
+
+        boolean isLeaf = true;
+
+        for(int next : adj.get(node)) {
+
+            if(next == parent) continue;
+
+            isLeaf = false;
+
+            int newFreq = (cat[next] == 1) ? freq + 1 : 0;
+
+            dfs(next, node, cat, newFreq, adj, capacity);
+        }
+
+        if(isLeaf) count++;
+    }
+
+    public static void main(String[] args) {
+
+        Scanner sc = new Scanner(System.in);
+
+        int n = sc.nextInt();
+        int m = sc.nextInt();
+
+        int cat[] = new int[n];
+
+        for(int i = 0; i < n; i++)
+            cat[i] = sc.nextInt();
+
+        ArrayList<ArrayList<Integer>> adj = new ArrayList<>();
+
+        for(int i = 0; i < n; i++)
+            adj.add(new ArrayList<>());
+
+        for(int i = 0; i < n-1; i++) {
+
+            int u = sc.nextInt() - 1;
+            int v = sc.nextInt() - 1;
+
+            adj.get(u).add(v);
+            adj.get(v).add(u);
+        }
+
+        dfs(0, -1, cat, cat[0], adj, m);
+
+        System.out.println(count);
+    }
+}
