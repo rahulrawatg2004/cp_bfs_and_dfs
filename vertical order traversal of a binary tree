@@ -1,0 +1,63 @@
+https://leetcode.com/problems/vertical-order-traversal-of-a-binary-tree/description/
+
+class Solution {
+
+    class Info{
+        TreeNode node;
+        int ht;
+        int hd;
+
+        public Info(TreeNode node,int ht,int hd){
+            this.node = node;
+            this.ht = ht;
+            this.hd = hd;
+        }
+    }
+
+    public List<List<Integer>> verticalTraversal(TreeNode root) {
+
+        List<List<Integer>> ans = new ArrayList<>();
+
+        TreeMap<Integer,TreeMap<Integer,List<Integer>>> table = new TreeMap<>();
+
+        Queue<Info> q = new LinkedList<>();
+        q.add(new Info(root,0,0));
+
+        while(!q.isEmpty()){
+
+            Info curr = q.remove();
+
+            if(!table.containsKey(curr.hd)){
+                table.put(curr.hd,new TreeMap<>());
+            }
+
+            if(!table.get(curr.hd).containsKey(curr.ht)){
+                table.get(curr.hd).put(curr.ht,new ArrayList<>());
+            }
+
+            table.get(curr.hd).get(curr.ht).add(curr.node.val);
+
+            if(curr.node.left != null){
+                q.add(new Info(curr.node.left,curr.ht+1,curr.hd-1));
+            }
+
+            if(curr.node.right != null){
+                q.add(new Info(curr.node.right,curr.ht+1,curr.hd+1));
+            }
+        }
+
+        for(TreeMap<Integer,List<Integer>> ys : table.values()){
+
+            List<Integer> col = new ArrayList<>();
+
+            for(List<Integer> nodes : ys.values()){
+                Collections.sort(nodes);
+                col.addAll(nodes);
+            }
+
+            ans.add(col);
+        }
+
+        return ans;
+    }
+}
