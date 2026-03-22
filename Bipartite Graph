@@ -1,0 +1,39 @@
+class Solution {
+    public boolean isBipartite(int V, int[][] edges) {
+        // Code here
+        ArrayList<ArrayList<Integer>> graph = new ArrayList<>();
+        for(int i=0;i<V;i++){
+            graph.add(new ArrayList<>());
+        }
+        for(int i=0;i<edges.length;i++){
+            int u = edges[i][0];
+            int v = edges[i][1];
+            
+            graph.get(u).add(v);
+            graph.get(v).add(u);
+            
+        }
+        int col[] = new int[V];
+        for(int i=0;i<V;i++){
+            col[i] = -1;    // -1 0 1
+        }
+        
+        Queue<Integer> q = new LinkedList<>();
+        q.add(0);
+        col[0] = 0;
+        while(!q.isEmpty()){
+            int curr = q.poll();
+            
+            for(int niegh : graph.get(curr)){
+                if(col[niegh]==-1){
+                    int nextCol = col[curr]==0 ? 1:0;
+                    col[niegh] = nextCol;
+                    q.add(niegh);
+                }else if(col[curr]==col[niegh]){
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+}
