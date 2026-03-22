@@ -1,0 +1,62 @@
+class Solution {
+    class Edge{
+        int v;
+        int wt;
+        public Edge(int v,int wt){
+            this.v = v;
+            this.wt = wt;
+        }
+    }
+    class Pair implements Comparable<Pair>{
+        int n;
+        int path;
+        public Pair(int n,int path){
+            this.n = n;
+            this.path = path;
+        }
+        @Override
+        public int compareTo(Pair p2){
+            return this.path-p2.path;
+        }
+    }
+   
+    public int[] dijkstra(int V, int[][] edges, int src) {
+        // code here
+        ArrayList<ArrayList<Edge>> graph = new ArrayList<>();
+        for(int i=0;i<V;i++){
+            graph.add(new ArrayList<>());
+        }
+        boolean vis[] = new boolean[V];
+        for(int i=0;i<edges.length;i++){
+            int u = edges[i][0];
+            int v = edges[i][1];
+            int wt = edges[i][2];
+            graph.get(u).add(new Edge(v,wt));
+            graph.get(v).add(new Edge(u,wt));
+        }
+        int dist[] = new int[V];
+        for(int i=0;i<V;i++){
+            if(i!=src){
+                dist[i] = Integer.MAX_VALUE;
+            }
+        }
+        PriorityQueue<Pair> q = new PriorityQueue<>();
+        q.add(new Pair(src,0));
+        while(!q.isEmpty()){
+            Pair curr = q.poll();
+            if(!vis[curr.n]){
+                vis[curr.n] = true;
+                for(Edge niegh : graph.get(curr.n)){
+                    int v = niegh.v;
+                    int wt = niegh.wt;
+                    if(dist[curr.n]+wt<dist[v]){
+                        dist[v] = dist[curr.n]+wt;
+                        q.add(new Pair(v,dist[v]));
+                    }
+                }
+            }
+        }
+        return dist;
+        
+    }
+}
