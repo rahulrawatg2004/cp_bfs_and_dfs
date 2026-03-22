@@ -1,0 +1,63 @@
+// Java Program to print all paths
+// from source to destination 
+
+import java.util.ArrayList;
+import java.util.List;
+
+ class GfG {
+     static ArrayList<ArrayList<Integer>> dfs(int src, int dest,
+                    List<List<Integer>> graph, ArrayList<Integer> path,
+                            ArrayList<ArrayList<Integer>> allPaths) {
+        
+        // Add the current vertex to the path
+        path.add(src);
+
+        // Store the path when destination is reached
+        if (src == dest) {
+            allPaths.add(new ArrayList<>(path));
+        } else {
+            for (int adjNode : graph.get(src)) {
+                dfs(adjNode, dest, graph, path, allPaths);
+            }
+        }
+
+        // remove the current vertex from the path
+        path.remove(path.size() - 1);
+        return allPaths;
+    }
+
+     static ArrayList<ArrayList<Integer>> findPaths(int v, int[][] edges,
+                            int src, int dest) {
+        List<List<Integer>> graph = new ArrayList<>();
+
+        // Build the graph from edges
+        for (int i = 0; i < v; i++) {
+            graph.add(new ArrayList<>());
+        }
+        for (int[] edge : edges) {
+            graph.get(edge[0]).add(edge[1]);
+        }
+
+        ArrayList<ArrayList<Integer>> allPaths = new ArrayList<>();
+        ArrayList<Integer> path = new ArrayList<>();
+
+        dfs(src, dest, graph, path, allPaths);
+
+        return allPaths;
+    }
+
+    public static void main(String[] args) {
+        int[][] edges = {{0, 3}, {0, 1}, {1, 3}, {2, 0}, {2, 1}};
+        int src = 2, dest = 3;
+        int v = 4;
+
+        ArrayList<ArrayList<Integer>> paths = findPaths(v, edges, src, dest);
+
+        for (ArrayList<Integer> path : paths) {
+            for (int vtx : path) {
+                System.out.print(vtx + " ");
+            }
+            System.out.println();
+        }
+    }
+}
