@@ -1,0 +1,56 @@
+// User function Template for Java
+class Solution {
+   static class DSU{
+       private int[] rank,par;
+      
+       public DSU(int V){
+           par = new int[V];
+           rank = new int[V];
+           
+           for(int i=0;i<V;i++){
+               par[i] = i;
+               rank[i] = 1;
+           }
+       }
+       
+       public int find(int x){
+           if(par[x]==x){
+               return x;
+           }
+           return par[x] = find(par[x]);
+       }
+       
+       public void union(int a,int b){
+           int parA = find(a);
+           int parB = find(b);
+           if(parA == parB) return;
+           if(rank[parA]==rank[parB]){
+               par[parB] = parA;
+               rank[parA]++;
+            }else if(rank[parA]<rank[parB]){
+                par[parA] = parB;
+            }else{
+                par[parB] = parA;
+            }
+       }
+       
+   }
+    static int kruskalsMST(int V, int[][] edges) {
+        // code here
+        Arrays.sort(edges, (a,b)-> a[2]-b[2]);
+        DSU dsu = new DSU(V);
+        int cost = 0;
+        int count = 0;
+        for (int[] e : edges) {
+            int x = e[0], y = e[1], w = e[2];
+        
+            if (dsu.find(x) != dsu.find(y)) {
+                dsu.union(x, y);
+                cost += w;
+                if (++count == V - 1) break;
+            }
+        }
+        return cost;
+         
+    }
+}
